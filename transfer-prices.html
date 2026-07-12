@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDN Transfer — Cennik / Prices / Ціни</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:        #080810;
+    --surface:   #10101C;
+    --surface2:  #16162A;
+    --border:    #252540;
+    --border2:   #32325A;
+    --gold:      #D4AE6A;
+    --gold-dim:  rgba(212,174,106,0.12);
+    --gold-glow: rgba(212,174,106,0.24);
+    --text:      #FFFFFF;
+    --muted:     #B0B0CC;
+    --sedan:     #7EC4DA;
+    --van:       #96C878;
+    --pacifica:  #BBA8DC;
+    --bus:       #D49A6C;
+    color-scheme: dark;
+  }
+  html {
+    scroll-behavior: smooth;
+    background: #080810;
+  }
+  body {
+    background-color: #080810;
+    background-image: radial-gradient(circle, #14142A 1px, transparent 1px);
+    background-size: 30px 30px;
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px; font-weight: 400; line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ─── TOP BAR ─── */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 7px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px;
+  }
+  .topbar-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: #AAAACC; letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .topbar-phone {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--gold); letter-spacing: 0.06em;
+    text-decoration: none; transition: color .2s;
+  }
+  .topbar-phone:hover { color: var(--text); }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 0 40px; height: 58px;
+    background: rgba(4,4,8,0.97);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 600; letter-spacing: 0.06em;
+    color: var(--gold); text-decoration: none; flex-shrink: 0;
+  }
+  .nav-logo span { color: #FFFFFF; font-weight: 400; }
+  .nav-links { display: flex; gap: 24px; flex: 1; justify-content: center; }
+  .nav-links a {
+    color: #AAAACC; text-decoration: none; font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase; transition: color .2s; white-space: nowrap;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+  .nav-phone {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--text); text-decoration: none; transition: color .2s; white-space: nowrap;
+  }
+  .nav-phone:hover { color: var(--gold); }
+
+  /* ─── LANG SWITCHER ─── */
+  .lang-sw { display: flex; gap: 3px; }
+  .lang-btn {
+    background: none; border: 1px solid var(--border2); color: var(--muted);
+    font-size: 10px; font-family: 'Inter', sans-serif;
+    padding: 4px 9px; border-radius: 2px; cursor: pointer;
+    transition: border-color .2s, color .2s; letter-spacing: 0.08em;
+  }
+  .lang-btn.active { border-color: var(--gold); color: var(--gold); }
+  .lang-btn:hover:not(.active) { border-color: var(--muted); color: var(--text); }
+
+  /* ─── HERO ─── */
+  .hero { padding: 72px 40px 36px; max-width: 1200px; margin: 0 auto; }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
+    margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
+  }
+  .hero-eyebrow::before { content:''; display:block; width:30px; height:1px; background:var(--gold); }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px,5vw,60px); font-weight: 400; line-height: 1.1;
+    color: #FFFFFF; max-width: 620px; margin-bottom: 22px;
+  }
+  h1 em { font-style: normal; color: var(--gold); }
+  .hero-sub {
+    color: #CCCCDD; font-size: 15px; font-weight: 400;
+    max-width: 520px; margin-bottom: 36px; line-height: 1.75;
+  }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+  .badge {
+    font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase;
+    padding: 5px 13px; border: 1px solid var(--border2); border-radius: 2px; color: #FFFFFF;
+  }
+  .badge.pac-badge { border-color: rgba(187,168,220,0.6); color: var(--pacifica); }
+  .search-wrap { position: relative; max-width: 460px; margin-bottom: 50px; }
+  .search-wrap input {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: 2px; color: var(--text); font-family: 'Inter', sans-serif;
+    font-size: 14px; font-weight: 300; padding: 13px 20px 13px 44px; outline: none;
+    transition: border-color .2s;
+  }
+  .search-wrap input::placeholder { color: var(--muted); }
+  .search-wrap input:focus { border-color: var(--gold); }
+  .search-icon { position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--muted); pointer-events:none; font-size:15px; }
+  .search-count { position:absolute; right:16px; top:50%; transform:translateY(-50%); font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); }
+
+  /* ─── CHRYSLER SPOTLIGHT ─── */
+  .spotlight { max-width:1200px; margin:0 auto 56px; padding:0 40px; }
+  .spotlight-card {
+    background: var(--surface2);
+    border: 1px solid rgba(168,150,200,0.25);
+    border-left: 3px solid var(--pacifica);
+    border-radius: 2px; padding: 28px 32px;
+    display: flex; align-items: flex-start; gap: 32px; flex-wrap: wrap;
+  }
+  .spotlight-left { flex:1; min-width:240px; }
+  .spotlight-tag {
+    font-family:'JetBrains Mono',monospace; font-size:10px;
+    letter-spacing:0.2em; text-transform:uppercase; color:var(--pacifica);
+    margin-bottom:10px; display:block;
+  }
+  .spotlight-name {
+    font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:400;
+    color:var(--text); margin-bottom:4px;
+  }
+  .spotlight-sub { font-size:13px; color:#CCCCDD; margin-bottom:18px; }
+  .spotlight-feats { display:flex; flex-wrap:wrap; gap:7px; }
+  .spotlight-feat {
+    font-size:11px; color:#CCCCDD; border:1px solid var(--border2);
+    padding:4px 10px; border-radius:2px;
+  }
+  .spotlight-feat em { font-style:normal; color:var(--pacifica); }
+  .spotlight-right { display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap; }
+  .spotlight-stat {
+    text-align:center; border:1px solid var(--border2);
+    padding:16px 20px; border-radius:2px; min-width:76px;
+  }
+  .spotlight-stat-num {
+    font-family:'JetBrains Mono',monospace; font-size:22px;
+    color:var(--pacifica); display:block; margin-bottom:4px;
+  }
+  .spotlight-stat-label { font-size:10px; color:#AAAACC; letter-spacing:0.08em; text-transform:uppercase; }
+  .spotlight-price-from {
+    text-align:center; background:rgba(168,150,200,0.07);
+    border:1px solid rgba(168,150,200,0.35);
+    padding:16px 22px; border-radius:2px; min-width:100px;
+  }
+  .spotlight-price-from small { font-size:10px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; display:block; margin-bottom:4px; }
+  .spotlight-price-from strong { font-family:'JetBrains Mono',monospace; font-size:24px; color:var(--pacifica); display:block; }
+  .spotlight-price-from span { font-size:10px; color:var(--muted); }
+
+  /* ─── SECTION LABEL ─── */
+  .section-label {
+    font-family:'JetBrains Mono',monospace; font-size:10px;
+    letter-spacing:0.22em; text-transform:uppercase; color:var(--gold);
+    padding:6px 0; border-top:1px solid var(--gold); display:inline-block;
+  }
+
+  /* ─── PRICE TABLE ─── */
+  .table-section { max-width:1200px; margin:0 auto 80px; padding:0 40px; }
+  .table-group { margin-bottom:48px; }
+  .table-group-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+
+  .col-legend {
+    display:grid;
+    grid-template-columns: 1fr 105px 110px 138px 125px;
+    padding:0 20px 11px; border-bottom:1px solid var(--border2);
+  }
+  .col-legend > div { font-size:10px; letter-spacing:0.11em; text-transform:uppercase; font-weight:400; }
+  .col-legend .c-route    { color:#AAAACC; }
+  .col-legend .c-sedan    { color:var(--sedan); }
+  .col-legend .c-van      { color:var(--van); }
+  .col-legend .c-pacifica { color:var(--pacifica); }
+  .col-legend .c-bus      { color:var(--bus); }
+
+  .price-row {
+    display:grid;
+    grid-template-columns: 1fr 105px 110px 138px 125px;
+    padding:0 20px; border-bottom:1px solid var(--border);
+    position:relative; transition:background .12s; cursor:default;
+  }
+  .price-row::before {
+    content:''; position:absolute; left:0; top:0; bottom:0;
+    width:2px; background:transparent; transition:background .12s;
+  }
+  .price-row:hover { background:var(--gold-dim); }
+  .price-row:hover::before { background:var(--gold); }
+  .price-row > div { padding:12px 0; display:flex; align-items:center; }
+  .row-route { font-size:13px; color:#FFFFFF; font-weight:400; padding-right:12px; }
+  .row-price { font-family:'JetBrains Mono',monospace; font-size:12px; gap:7px; flex-wrap:wrap; font-weight:400; }
+  .row-price.sedan    { color:var(--sedan); }
+  .row-price.van      { color:var(--van); }
+  .row-price.pacifica { color:var(--pacifica); }
+  .row-price.bus      { color:var(--bus); }
+
+  .book-btn {
+    display:inline-flex; align-items:center;
+    padding:4px 9px; border:1px solid currentColor;
+    border-radius:1px; font-size:10px; letter-spacing:0.08em;
+    text-transform:uppercase; text-decoration:none;
+    transition:background .12s, color .12s; white-space:nowrap; margin-left:5px;
+    font-family:'Inter',sans-serif;
+  }
+  .book-btn.sedan    { color:var(--sedan); }
+  .book-btn.van      { color:var(--van); }
+  .book-btn.pacifica { color:var(--pacifica); }
+  .book-btn.bus      { color:var(--bus); }
+  .book-btn:hover { color:#030305; background:currentColor; }
+  .no-service { color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:12px; }
+  .price-row.hidden { display:none; }
+
+  /* ─── FEATURES ─── */
+  .features { max-width:1200px; margin:0 auto 80px; padding:0 40px; }
+  .features-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; border:1px solid var(--border2); }
+  .feature-item { padding:30px 22px; border-right:1px solid var(--border2); }
+  .feature-item:last-child { border-right:none; }
+  .feature-icon { font-size:18px; margin-bottom:14px; display:block; }
+  .feature-title { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:400; margin-bottom:8px; }
+  .feature-text { color:#CCCCDD; font-size:13px; line-height:1.65; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top:1px solid var(--border2); padding:36px 40px;
+    max-width:1200px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:18px;
+  }
+  .footer-logo { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; color:var(--gold); }
+  .footer-links { display:flex; gap:22px; flex-wrap:wrap; }
+  .footer-links a {
+    font-size:11px; color:#AAAACC; text-decoration:none;
+    text-transform:uppercase; letter-spacing:0.1em; transition:color .2s;
+  }
+  .footer-links a:hover { color:#FFFFFF; }
+  .footer-copy { font-family:'JetBrains Mono',monospace; font-size:11px; color:#AAAACC; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width:1060px) {
+    .col-legend { grid-template-columns:1fr 95px 100px 128px 115px; }
+    .price-row  { grid-template-columns:1fr 95px 100px 128px 115px; }
+  }
+  @media (max-width:900px) {
+    nav { padding:0 20px; }
+    .nav-links { display:none; }
+    .topbar { padding:7px 20px; }
+    .hero { padding:48px 20px 28px; }
+    .spotlight { padding:0 20px; }
+    .table-section { padding:0 20px; }
+    .col-legend { grid-template-columns:1fr 90px 105px 120px; }
+    .price-row  { grid-template-columns:1fr 90px 105px 120px; }
+    .col-legend>div:nth-child(5), .price-row>div:nth-child(5) { display:none; }
+    .features { padding:0 20px; }
+    .features-grid { grid-template-columns:1fr 1fr; }
+    .feature-item:nth-child(2) { border-right:none; }
+    footer { padding:28px 20px; }
+  }
+  @media (max-width:580px) {
+    .col-legend { grid-template-columns:1fr 82px 118px; padding:0 12px 10px; }
+    .price-row  { grid-template-columns:1fr 82px 118px; padding:0 12px; }
+    .col-legend>div:nth-child(3), .price-row>div:nth-child(3) { display:none; }
+    .book-btn { display:none; }
+    .features-grid { grid-template-columns:1fr; }
+    .feature-item { border-right:none; }
+    .spotlight-card { padding:18px; }
+    .lang-btn { padding:4px 7px; }
+  }
+  @media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <span class="topbar-text" data-i18n="topbar">Fixed prices &middot; All routes &middot; 24/7 &middot; Flight tracking</span>
+  <a class="topbar-phone" href="tel:+48512018663">+48 512 018 663</a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">GDN<span> Transfer</span></a>
+  <div class="nav-links">
+    <a href="#" data-i18n="navServices">Services</a>
+    <a href="#" data-i18n="navFleet">Fleet</a>
+    <a href="#prices" data-i18n="navPrices">Prices</a>
+    <a href="#" data-i18n="navBooking">Booking</a>
+    <a href="#" data-i18n="navContact">Contact</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-sw">
+      <button class="lang-btn" data-lang="pl" onclick="setLang('pl')">&#127477;&#127473; PL</button>
+      <button class="lang-btn active" data-lang="en" onclick="setLang('en')">&#127468;&#127463; EN</button>
+      <button class="lang-btn" data-lang="uk" onclick="setLang('uk')">&#127482;&#127462; UA</button>
+    </div>
+    <a class="nav-phone" href="tel:+48512018663">+48 512 018 663</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow" data-i18n="eyebrow">Fixed-rate private transfers &middot; Gda&#324;sk Airport GDN</div>
+  <h1><span data-i18n="h1a">Every route.</span><br><em data-i18n="h1b">One clear price.</em></h1>
+  <p class="hero-sub" data-i18n="heroSub">Pre-booked transfers from Gda&#324;sk Lech Wa&#322;&#281;sa Airport. No meters, no surge pricing &mdash; your fare is confirmed at booking.</p>
+  <div class="badges">
+    <div class="badge" data-i18n="badge1">&#10003; Parking &amp; tolls included</div>
+    <div class="badge" data-i18n="badge2">&#10003; Flight tracking</div>
+    <div class="badge" data-i18n="badge3">&#10003; English-speaking drivers</div>
+    <div class="badge" data-i18n="badge4">&#10003; 24 / 7 service</div>
+    <div class="badge" data-i18n="badge5">Sedan from 120 z&#322;</div>
+    <div class="badge pac-badge" data-i18n="badge6">&#9733; Chrysler Pacifica &middot; 7 pax &middot; from 155 z&#322;</div>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">&#10023;</span>
+    <input type="text" id="searchInput" data-i18n-ph="searchPh" placeholder="Search destination&hellip;" autocomplete="off">
+    <span class="search-count" id="searchCount"></span>
+  </div>
+</section>
+
+<!-- CHRYSLER SPOTLIGHT -->
+<div class="spotlight">
+  <div class="spotlight-card">
+    <div class="spotlight-left">
+      <span class="spotlight-tag" data-i18n="spotTag">&#9733; Featured vehicle</span>
+      <div class="spotlight-name">Chrysler Pacifica</div>
+      <div class="spotlight-sub" data-i18n="spotSub">Comfortable 7-passenger minivan &middot; Perfect for families &amp; groups</div>
+      <div class="spotlight-feats">
+        <span class="spotlight-feat"><em>&#10022;</em> <span data-i18n="spotF1">7 seats</span></span>
+        <span class="spotlight-feat"><em>&#10022;</em> <span data-i18n="spotF2">Spacious luggage area</span></span>
+        <span class="spotlight-feat"><em>&#10022;</em> <span data-i18n="spotF3">Leather interior</span></span>
+        <span class="spotlight-feat"><em>&#10022;</em> <span data-i18n="spotF4">Climate control</span></span>
+        <span class="spotlight-feat"><em>&#10022;</em> <span data-i18n="spotF5">USB charging</span></span>
+        <span class="spotlight-feat"><em>&#10022;</em> <span data-i18n="spotF6">Smooth sliding doors</span></span>
+      </div>
+    </div>
+    <div class="spotlight-right">
+      <div class="spotlight-stat">
+        <span class="spotlight-stat-num">7</span>
+        <span class="spotlight-stat-label" data-i18n="spotPax">Passengers</span>
+      </div>
+      <div class="spotlight-stat">
+        <span class="spotlight-stat-num">4+</span>
+        <span class="spotlight-stat-label" data-i18n="spotBags">Suitcases</span>
+      </div>
+      <div class="spotlight-price-from">
+        <small data-i18n="spotFrom">From</small>
+        <strong>155 z&#322;</strong>
+        <span data-i18n="spotCity">Gda&#324;sk Center</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICE TABLES -->
+<div class="table-section" id="prices">
+
+  <!-- TRANSFERS -->
+  <div class="table-group" id="group-transfers">
+    <div class="table-group-header"><span class="section-label" data-i18n="secTransfers">Airport Transfers</span></div>
+    <div class="col-legend">
+      <div class="c-route" data-i18n="colRoute">Route (from / to airport)</div>
+      <div class="c-sedan" data-i18n="colSedan">Sedan &middot; 1&ndash;4 pax</div>
+      <div class="c-van" data-i18n="colVan">Van &middot; 1&ndash;5 pax</div>
+      <div class="c-pacifica" data-i18n="colPacifica">Chrysler Pacifica &middot; 1&ndash;7 pax</div>
+      <div class="c-bus" data-i18n="colBus">Bus &middot; 1&ndash;8 pax</div>
+    </div>
+    <div class="price-rows">
+      <div class="price-row" data-route="gdansk centrum center">
+        <div class="row-route" data-en="Airport Gdańsk → Gdańsk Center" data-pl="Lotnisko Gdańsk → Centrum Gdańska" data-uk="Аеропорт Гданськ → Центр Гданська">Airport Gdańsk → Gdańsk Center</div>
+        <div class="row-price sedan">120&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">140&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">155&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">160&ndash;175&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="sopot">
+        <div class="row-route" data-en="Airport Gdańsk → Sopot" data-pl="Lotnisko Gdańsk → Sopot" data-uk="Аеропорт Гданськ → Сопот">Airport Gdańsk → Sopot</div>
+        <div class="row-price sedan">130&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">150&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">170&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">175&ndash;195&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="gdynia center centrum">
+        <div class="row-route" data-en="Airport Gdańsk → Gdynia Center" data-pl="Lotnisko Gdańsk → Centrum Gdyni" data-uk="Аеропорт Гданськ → Центр Гдині">Airport Gdańsk → Gdynia Center</div>
+        <div class="row-price sedan">160&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">175&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">195&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">195&ndash;220&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="gdynia port cruise stare miasto">
+        <div class="row-route" data-en="Gdynia Port → Gdańsk Old Town" data-pl="Port Gdynia → Stare Miasto Gdańsk" data-uk="Порт Гдиня → Старе Місто Гданськ">Gdynia Port → Gdańsk Old Town</div>
+        <div class="row-price sedan"><span class="no-service">&mdash;</span></div>
+        <div class="row-price van"><span class="no-service">&mdash;</span></div>
+        <div class="row-price pacifica">240&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">220&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="pruszcz gdanski gdański">
+        <div class="row-route" data-en="Airport Gdańsk → Pruszcz Gdański" data-pl="Lotnisko Gdańsk → Pruszcz Gdański" data-uk="Аеропорт Гданськ → Прущ Гданський">Airport Gdańsk → Pruszcz Gdański</div>
+        <div class="row-price sedan">160&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">175&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">195&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">220&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="kolbudy">
+        <div class="row-route" data-en="Airport Gdańsk → Kolbudy" data-pl="Lotnisko Gdańsk → Kolbudy" data-uk="Аеропорт Гданськ → Колбуди">Airport Gdańsk → Kolbudy</div>
+        <div class="row-price sedan">140&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">175&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">195&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">220&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="sobieszewo">
+        <div class="row-route" data-en="Airport Gdańsk → Sobieszewo" data-pl="Lotnisko Gdańsk → Sobieszewo" data-uk="Аеропорт Гданськ → Собєшево">Airport Gdańsk → Sobieszewo</div>
+        <div class="row-price sedan">195&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">240&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">265&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">265&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="rumia">
+        <div class="row-route" data-en="Airport Gdańsk → Rumia" data-pl="Lotnisko Gdańsk → Rumia" data-uk="Аеропорт Гданськ → Румя">Airport Gdańsk → Rumia</div>
+        <div class="row-price sedan">175&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">210&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">235&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">255&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="reda">
+        <div class="row-route" data-en="Airport Gdańsk → Reda" data-pl="Lotnisko Gdańsk → Reda" data-uk="Аеропорт Гданськ → Реда">Airport Gdańsk → Reda</div>
+        <div class="row-price sedan">195&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">220&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">245&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">265&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="wejherowo">
+        <div class="row-route" data-en="Airport Gdańsk → Wejherowo" data-pl="Lotnisko Gdańsk → Wejherowo" data-uk="Аеропорт Гданськ → Вейгерово">Airport Gdańsk → Wejherowo</div>
+        <div class="row-price sedan">210&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">255&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">285&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">300&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="kartuzy">
+        <div class="row-route" data-en="Airport Gdańsk → Kartuzy" data-pl="Lotnisko Gdańsk → Kartuzy" data-uk="Аеропорт Гданськ → Картузи">Airport Gdańsk → Kartuzy</div>
+        <div class="row-price sedan">175&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">220&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">245&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">265&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="tczew">
+        <div class="row-route" data-en="Airport Gdańsk → Tczew" data-pl="Lotnisko Gdańsk → Tczew" data-uk="Аеропорт Гданськ → Тчев">Airport Gdańsk → Tczew</div>
+        <div class="row-price sedan">220&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">255&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">285&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">300&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="nowy dwor gdanski gdański">
+        <div class="row-route" data-en="Airport Gdańsk → Nowy Dwór Gdański" data-pl="Lotnisko Gdańsk → Nowy Dwór Gdański" data-uk="Аеропорт Гданськ → Новий Двур Гданський">Airport Gdańsk → Nowy Dwór Gdański</div>
+        <div class="row-price sedan">280&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">310&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">345&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">350&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="stegna">
+        <div class="row-route" data-en="Airport Gdańsk → Stegna" data-pl="Lotnisko Gdańsk → Stegna" data-uk="Аеропорт Гданськ → Стегна">Airport Gdańsk → Stegna</div>
+        <div class="row-price sedan">310&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">350&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">390&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">395&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="starogard gdanski gdański">
+        <div class="row-route" data-en="Airport Gdańsk → Starogard Gdański" data-pl="Lotnisko Gdańsk → Starogard Gdański" data-uk="Аеропорт Гданськ → Старогард Гданський">Airport Gdańsk → Starogard Gdański</div>
+        <div class="row-price sedan">280&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">325&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">365&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">350&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="koscierzyna kościerzyna">
+        <div class="row-route" data-en="Airport Gdańsk → Kościerzyna" data-pl="Lotnisko Gdańsk → Kościerzyna" data-uk="Аеропорт Гданськ → Косцєжина">Airport Gdańsk → Kościerzyna</div>
+        <div class="row-price sedan">280&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">310&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">345&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">350&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="malbork">
+        <div class="row-route" data-en="Airport Gdańsk → Malbork" data-pl="Lotnisko Gdańsk → Malbork" data-uk="Аеропорт Гданськ → Мальборк">Airport Gdańsk → Malbork</div>
+        <div class="row-price sedan">335&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">380&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">425&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">440&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="lebork lębork">
+        <div class="row-route" data-en="Airport Gdańsk → Lębork" data-pl="Lotnisko Gdańsk → Lębork" data-uk="Аеропорт Гданськ → Ленборк">Airport Gdańsk → Lębork</div>
+        <div class="row-price sedan">335&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">380&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">425&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">395&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="elblag elbląg">
+        <div class="row-route" data-en="Airport Gdańsk → Elbląg" data-pl="Lotnisko Gdańsk → Elbląg" data-uk="Аеропорт Гданськ → Ельблонг">Airport Gdańsk → Elbląg</div>
+        <div class="row-price sedan">350&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">395&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">440&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">440&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="władysławowo wladyslawowo">
+        <div class="row-route" data-en="Airport Gdańsk → Władysławowo" data-pl="Lotnisko Gdańsk → Władysławowo" data-uk="Аеропорт Гданськ → Владиславово">Airport Gdańsk → Władysławowo</div>
+        <div class="row-price sedan">350&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">380&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">425&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">440&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="jastrzebia gora jastrzębia góra">
+        <div class="row-route" data-en="Airport Gdańsk → Jastrzębia Góra" data-pl="Lotnisko Gdańsk → Jastrzębia Góra" data-uk="Аеропорт Гданськ → Ястшемба Гура">Airport Gdańsk → Jastrzębia Góra</div>
+        <div class="row-price sedan">350&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">395&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">440&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">440&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="gniew">
+        <div class="row-route" data-en="Airport Gdańsk → Gniew" data-pl="Lotnisko Gdańsk → Gniew" data-uk="Аеропорт Гданськ → Гнєв">Airport Gdańsk → Gniew</div>
+        <div class="row-price sedan">395&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">440&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">490&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">485&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="bytow bytów">
+        <div class="row-route" data-en="Airport Gdańsk → Bytów" data-pl="Lotnisko Gdańsk → Bytów" data-uk="Аеропорт Гданськ → Битів">Airport Gdańsk → Bytów</div>
+        <div class="row-price sedan">395&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">440&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">490&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">485&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="chalupy chałupy">
+        <div class="row-route" data-en="Airport Gdańsk → Chałupy" data-pl="Lotnisko Gdańsk → Chałupy" data-uk="Аеропорт Гданськ → Халупи">Airport Gdańsk → Chałupy</div>
+        <div class="row-price sedan">395&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">440&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">490&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">530&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="jastarnia">
+        <div class="row-route" data-en="Airport Gdańsk → Jastarnia" data-pl="Lotnisko Gdańsk → Jastarnia" data-uk="Аеропорт Гданськ → Ястарня">Airport Gdańsk → Jastarnia</div>
+        <div class="row-price sedan">440&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">485&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">540&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">570&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="jurata">
+        <div class="row-route" data-en="Airport Gdańsk → Jurata" data-pl="Lotnisko Gdańsk → Jurata" data-uk="Аеропорт Гданськ → Юрата">Airport Gdańsk → Jurata</div>
+        <div class="row-price sedan">440&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">485&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">540&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">570&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="hel peninsula">
+        <div class="row-route" data-en="Airport Gdańsk → Hel" data-pl="Lotnisko Gdańsk → Hel" data-uk="Аеропорт Гданськ → Гель">Airport Gdańsk → Hel</div>
+        <div class="row-price sedan">485&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">530&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">595&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">570&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="leba łeba">
+        <div class="row-route" data-en="Airport Gdańsk → Łeba" data-pl="Lotnisko Gdańsk → Łeba" data-uk="Аеропорт Гданськ → Лемба">Airport Gdańsk → Łeba</div>
+        <div class="row-price sedan">440&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">465&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">520&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">530&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="lubiatowo kopalino">
+        <div class="row-route" data-en="Airport Gdańsk → Lubiatowo / Kopalino" data-pl="Lotnisko Gdańsk → Lubiatowo / Kopalino" data-uk="Аеропорт Гданськ → Лубятово / Копаліно">Airport Gdańsk → Lubiatowo / Kopalino</div>
+        <div class="row-price sedan">440&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van"><span class="no-service">&mdash;</span></div>
+        <div class="row-price pacifica">490&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">530&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="krynica morska">
+        <div class="row-route" data-en="Airport Gdańsk → Krynica Morska" data-pl="Lotnisko Gdańsk → Krynica Morska" data-uk="Аеропорт Гданськ → Криниця Морська">Airport Gdańsk → Krynica Morska</div>
+        <div class="row-price sedan">440&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">530&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">595&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">615&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="kwidzyn">
+        <div class="row-route" data-en="Airport Gdańsk → Kwidzyn" data-pl="Lotnisko Gdańsk → Kwidzyn" data-uk="Аеропорт Гданськ → Квідзин">Airport Gdańsk → Kwidzyn</div>
+        <div class="row-price sedan">485&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">530&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">595&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">570&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="slupsk słupsk">
+        <div class="row-route" data-en="Airport Gdańsk → Słupsk" data-pl="Lotnisko Gdańsk → Słupsk" data-uk="Аеропорт Гданськ → Слупськ">Airport Gdańsk → Słupsk</div>
+        <div class="row-price sedan">530&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">570&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">635&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">615&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="swiecie świecie">
+        <div class="row-route" data-en="Airport Gdańsk → Świecie" data-pl="Lotnisko Gdańsk → Świecie" data-uk="Аеропорт Гданськ → Свєце">Airport Gdańsk → Świecie</div>
+        <div class="row-price sedan">530&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">570&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">635&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">660&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="grudziadz grudziądz">
+        <div class="row-route" data-en="Airport Gdańsk → Grudziądz" data-pl="Lotnisko Gdańsk → Grudziądz" data-uk="Аеропорт Гданськ → Ґрудзьондз">Airport Gdańsk → Grudziądz</div>
+        <div class="row-price sedan">530&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">570&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">635&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">615&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="grzechotki border granica">
+        <div class="row-route" data-en="Airport Gdańsk → Grzechotki Border" data-pl="Lotnisko Gdańsk → Przejście Grzechotki" data-uk="Аеропорт Гданськ → Пункт пропуску Гжехоткі">Airport Gdańsk → Grzechotki Border</div>
+        <div class="row-price sedan">530&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van"><span class="no-service">&mdash;</span></div>
+        <div class="row-price pacifica">590&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus"><span class="no-service">&mdash;</span></div>
+      </div>
+      <div class="price-row" data-route="braniewo">
+        <div class="row-route" data-en="Airport Gdańsk → Braniewo" data-pl="Lotnisko Gdańsk → Braniewo" data-uk="Аеропорт Гданськ → Бранєво">Airport Gdańsk → Braniewo</div>
+        <div class="row-price sedan">510&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">570&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">635&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">615&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="ostroda ostróda">
+        <div class="row-route" data-en="Airport Gdańsk → Ostróda" data-pl="Lotnisko Gdańsk → Ostróda" data-uk="Аеропорт Гданськ → Оструда">Airport Gdańsk → Ostróda</div>
+        <div class="row-price sedan">615&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">705&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">790&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">790&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="bydgoszcz">
+        <div class="row-route" data-en="Airport Gdańsk → Bydgoszcz" data-pl="Lotnisko Gdańsk → Bydgoszcz" data-uk="Аеропорт Гданськ → Бидґощ">Airport Gdańsk → Bydgoszcz</div>
+        <div class="row-price sedan">790&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">835&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">935&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">970&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="torun toruń">
+        <div class="row-route" data-en="Airport Gdańsk → Toruń" data-pl="Lotnisko Gdańsk → Toruń" data-uk="Аеропорт Гданськ → Торунь">Airport Gdańsk → Toruń</div>
+        <div class="row-price sedan">790&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">835&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">935&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">970&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="olsztyn">
+        <div class="row-route" data-en="Airport Gdańsk → Olsztyn" data-pl="Lotnisko Gdańsk → Olsztyn" data-uk="Аеропорт Гданськ → Ольштин">Airport Gdańsk → Olsztyn</div>
+        <div class="row-price sedan">790&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">835&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">935&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">970&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="koszalin">
+        <div class="row-route" data-en="Airport Gdańsk → Koszalin" data-pl="Lotnisko Gdańsk → Koszalin" data-uk="Аеропорт Гданськ → Кошалін">Airport Gdańsk → Koszalin</div>
+        <div class="row-price sedan">790&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">835&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">935&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">970&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="kaliningrad russia">
+        <div class="row-route" data-en="Airport Gdańsk → Kaliningrad" data-pl="Lotnisko Gdańsk → Kaliningrad" data-uk="Аеропорт Гданськ → Калінінград">Airport Gdańsk → Kaliningrad</div>
+        <div class="row-price sedan">970&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">1&nbsp;055&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">1&nbsp;180&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus"><span class="no-service">&mdash;</span></div>
+      </div>
+      <div class="price-row" data-route="warszawa warsaw">
+        <div class="row-route" data-en="Airport Gdańsk → Warszawa" data-pl="Lotnisko Gdańsk → Warszawa" data-uk="Аеропорт Гданськ → Варшава">Airport Gdańsk → Warszawa</div>
+        <div class="row-price sedan">1&nbsp;495&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">1&nbsp;585&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">1&nbsp;775&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">1&nbsp;850&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="poznan poznań">
+        <div class="row-route" data-en="Airport Gdańsk → Poznań" data-pl="Lotnisko Gdańsk → Poznań" data-uk="Аеропорт Гданськ → Познань">Airport Gdańsk → Poznań</div>
+        <div class="row-price sedan">1&nbsp;495&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">1&nbsp;585&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">1&nbsp;775&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">1&nbsp;850&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="lodz łódź">
+        <div class="row-route" data-en="Airport Gdańsk → Łódź" data-pl="Lotnisko Gdańsk → Łódź" data-uk="Аеропорт Гданськ → Лодзь">Airport Gdańsk → Łódź</div>
+        <div class="row-price sedan">1&nbsp;495&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">1&nbsp;585&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">1&nbsp;775&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">1&nbsp;850&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="szczecin goleniow goleniów">
+        <div class="row-route" data-en="Airport Gdańsk → Szczecin / Goleniów Airport" data-pl="Lotnisko Gdańsk → Szczecin / Lotnisko Goleniów" data-uk="Аеропорт Гданськ → Щецин / Аеропорт Голеніув">Airport Gdańsk → Szczecin / Goleniów Airport</div>
+        <div class="row-price sedan">1&nbsp;495&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">1&nbsp;585&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">1&nbsp;775&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">1&nbsp;850&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+    </div>
+  </div><!-- /transfers -->
+
+  <!-- GOLF -->
+  <div class="table-group" id="group-golf">
+    <div class="table-group-header"><span class="section-label" data-i18n="secGolf">Golf Clubs</span></div>
+    <div class="col-legend">
+      <div class="c-route" data-i18n="colRouteGolf">Route</div>
+      <div class="c-sedan" data-i18n="colSedan">Sedan &middot; 1&ndash;4 pax</div>
+      <div class="c-van" data-i18n="colVan">Van &middot; 1&ndash;5 pax</div>
+      <div class="c-pacifica" data-i18n="colPacifica">Chrysler Pacifica &middot; 1&ndash;7 pax</div>
+      <div class="c-bus" data-i18n="colBus">Bus &middot; 1&ndash;8 pax</div>
+    </div>
+    <div class="price-rows">
+      <div class="price-row" data-route="postolowo golf club">
+        <div class="row-route" data-en="Gdańsk Center → Postołowo Golf Club" data-pl="Centrum Gdańska → Klub Golfowy Postołowo" data-uk="Центр Гданська → Гольф-клуб Постолово">Gdańsk Center → Postołowo Golf Club</div>
+        <div class="row-price sedan">200&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">220&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">245&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">310&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="sierra golf club">
+        <div class="row-route" data-en="Gdańsk Center → Sierra Golf Club" data-pl="Centrum Gdańska → Klub Golfowy Sierra" data-uk="Центр Гданська → Гольф-клуб Сьєрра">Gdańsk Center → Sierra Golf Club</div>
+        <div class="row-price sedan">265&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">310&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">345&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">350&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="sand valley golf">
+        <div class="row-route" data-en="Gdańsk Center → Sand Valley" data-pl="Centrum Gdańska → Sand Valley" data-uk="Центр Гданська → Sand Valley">Gdańsk Center → Sand Valley</div>
+        <div class="row-price sedan">395&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van">440&nbsp;z&#322;<a class="book-btn van" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price pacifica">490&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">485&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+    </div>
+  </div><!-- /golf -->
+
+  <!-- TOURS -->
+  <div class="table-group" id="group-tours">
+    <div class="table-group-header"><span class="section-label" data-i18n="secTours">Day Tours</span></div>
+    <div class="col-legend">
+      <div class="c-route" data-i18n="colRouteTours">Tour</div>
+      <div class="c-sedan" data-i18n="colTourSedan">Car &middot; up to 4 pax</div>
+      <div class="c-van" data-i18n="colTourVan">Car &middot; up to 5 pax</div>
+      <div class="c-pacifica" data-i18n="colTourPac">Chrysler Pacifica &middot; up to 7 pax</div>
+      <div class="c-bus" data-i18n="colTourBus">Car &middot; up to 8 pax</div>
+    </div>
+    <div class="price-rows">
+      <div class="price-row" data-route="malbork castle museum">
+        <div class="row-route" data-en="Tour to Malbork Castle Museum" data-pl="Wycieczka do Zamku w Malborku" data-uk="Тур до Замку в Мальборку">Tour to Malbork Castle Museum</div>
+        <div class="row-price sedan">660&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van"><span class="no-service">&mdash;</span></div>
+        <div class="row-price pacifica">850&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">790&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="stutthof museum sztutowo">
+        <div class="row-route" data-en="Stutthof Museum &ndash; Sztutowo" data-pl="Muzeum Stutthof &ndash; Sztutowo" data-uk="Музей Штутгоф &ndash; Штутово">Stutthof Museum &ndash; Sztutowo</div>
+        <div class="row-price sedan">570&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van"><span class="no-service">&mdash;</span></div>
+        <div class="row-price pacifica">715&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">660&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="szymbark upside down house dom">
+        <div class="row-route" data-en="Upside-Down House in Szymbark" data-pl="Dom do góry nogami w Szymbarku" data-uk="Перевернутий будинок у Шимбарку">Upside-Down House in Szymbark</div>
+        <div class="row-price sedan">615&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van"><span class="no-service">&mdash;</span></div>
+        <div class="row-price pacifica">770&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">705&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="tricity tri-city gdansk sopot gdynia 4h">
+        <div class="row-route" data-en="Round Trip Tri-City &ndash; 4h" data-pl="Objazd Trójmiastem &ndash; 4h" data-uk="Тур Тримістям &ndash; 4h">Round Trip Tri-City &ndash; 4h</div>
+        <div class="row-price sedan">530&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van"><span class="no-service">&mdash;</span></div>
+        <div class="row-price pacifica">670&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">615&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="tricity tri-city gdansk sopot gdynia 6 8h">
+        <div class="row-route" data-en="Round Trip Tri-City &ndash; 6&ndash;8h" data-pl="Objazd Trójmiastem &ndash; 6&ndash;8h" data-uk="Тур Тримістям &ndash; 6&ndash;8h">Round Trip Tri-City &ndash; 6&ndash;8h</div>
+        <div class="row-price sedan">615&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van"><span class="no-service">&mdash;</span></div>
+        <div class="row-price pacifica">865&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">790&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="dinosaur park leba łeba">
+        <div class="row-route" data-en="Dinosaur Park Łeba" data-pl="Park Dinozaurów Łeba" data-uk="Парк Динозаврів Лемба">Dinosaur Park Łeba</div>
+        <div class="row-price sedan"><span class="no-service">&mdash;</span></div>
+        <div class="row-price van"><span class="no-service">&mdash;</span></div>
+        <div class="row-price pacifica">960&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">880&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="wolf lair wilczy szaniec">
+        <div class="row-route" data-en="Wolf's Lair (Wilczy Szaniec)" data-pl="Wilczy Szaniec" data-uk="Вовче Лігво">Wolf's Lair (Wilczy Szaniec)</div>
+        <div class="row-price sedan"><span class="no-service">&mdash;</span></div>
+        <div class="row-price van"><span class="no-service">&mdash;</span></div>
+        <div class="row-price pacifica">1&nbsp;720&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">1&nbsp;585&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="ocean park wladyslawowo władysławowo">
+        <div class="row-route" data-en="Ocean Park Władysławowo" data-pl="Ocean Park Władysławowo" data-uk="Ocean Park Владиславово">Ocean Park Władysławowo</div>
+        <div class="row-price sedan"><span class="no-service">&mdash;</span></div>
+        <div class="row-price van"><span class="no-service">&mdash;</span></div>
+        <div class="row-price pacifica">960&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">880&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="kolibki adventure park gdynia">
+        <div class="row-route" data-en="Gdynia Kolibki Adventure Park" data-pl="Park Przygody Kolibki Gdynia" data-uk="Парк пригод Колібки Гдиня">Gdynia Kolibki Adventure Park</div>
+        <div class="row-price sedan"><span class="no-service">&mdash;</span></div>
+        <div class="row-price van"><span class="no-service">&mdash;</span></div>
+        <div class="row-price pacifica">480&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">440&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+      <div class="price-row" data-route="fun arena gdansk gdańsk">
+        <div class="row-route" data-en="Fun Arena Gdańsk" data-pl="Fun Arena Gdańsk" data-uk="Fun Arena Гданськ">Fun Arena Gdańsk</div>
+        <div class="row-price sedan">105&nbsp;z&#322;<a class="book-btn sedan" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price van"><span class="no-service">&mdash;</span></div>
+        <div class="row-price pacifica">190&nbsp;z&#322;<a class="book-btn pacifica" data-i18n="book" href="#">Book</a></div>
+        <div class="row-price bus">175&nbsp;z&#322;<a class="book-btn bus" data-i18n="book" href="#">Book</a></div>
+      </div>
+    </div>
+  </div><!-- /tours -->
+
+  <div id="emptyState" style="display:none;padding:48px 0;text-align:center;">
+    <p style="font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:13px;">
+      <span id="emptyMsg">No routes found &mdash;</span>
+      <a href="#" id="clearBtn" style="color:var(--gold);">clear search</a>
+    </p>
+  </div>
+</div><!-- /table-section -->
+
+<!-- FEATURES -->
+<div class="features">
+  <div class="features-grid">
+    <div class="feature-item">
+      <span class="feature-icon">&#10022;</span>
+      <div class="feature-title" data-i18n="f1t">Fixed fare</div>
+      <p class="feature-text" data-i18n="f1d">Price confirmed at booking. No meters, no surge, no hidden fees &mdash; parking and tolls always included.</p>
+    </div>
+    <div class="feature-item">
+      <span class="feature-icon">&#9711;</span>
+      <div class="feature-title" data-i18n="f2t">Flight tracking</div>
+      <p class="feature-text" data-i18n="f2d">We monitor your flight in real time. If it's delayed, your driver adjusts &mdash; at no extra charge.</p>
+    </div>
+    <div class="feature-item">
+      <span class="feature-icon">&#9672;</span>
+      <div class="feature-title" data-i18n="f3t">Name-board meet</div>
+      <p class="feature-text" data-i18n="f3d">Your driver meets you in the arrivals hall holding a board with your name or company logo.</p>
+    </div>
+    <div class="feature-item">
+      <span class="feature-icon">&#11041;</span>
+      <div class="feature-title" data-i18n="f4t">24 / 7 availability</div>
+      <p class="feature-text" data-i18n="f4d">Early morning, late night, or on a public holiday &mdash; we operate every day of the year.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">GDN Transfer</div>
+  <div class="footer-links">
+    <a href="#" data-i18n="footerBooking">Booking</a>
+    <a href="#" data-i18n="footerFleet">Fleet</a>
+    <a href="#">FAQ</a>
+    <a href="#" data-i18n="footerTerms">Terms</a>
+    <a href="#" data-i18n="footerContact">Contact</a>
+  </div>
+  <div class="footer-copy" data-i18n="footerCopy">&copy; 2026 GDN Transfer &middot; Gda&#324;sk, Poland</div>
+</footer>
+
+<script>
+const T = {
+  en: {
+    topbar: "Fixed prices · All routes · 24/7 · Flight tracking",
+    navServices:"Services", navFleet:"Fleet", navPrices:"Prices", navBooking:"Booking", navContact:"Contact",
+    eyebrow:"Fixed-rate private transfers · Gdańsk Airport GDN",
+    h1a:"Every route.", h1b:"One clear price.",
+    heroSub:"Pre-booked transfers from Gdańsk Lech Wałęsa Airport. No meters, no surge pricing — your fare is confirmed at booking.",
+    badge1:"✓ Parking & tolls included", badge2:"✓ Flight tracking",
+    badge3:"✓ English-speaking drivers", badge4:"✓ 24 / 7 service",
+    badge5:"Sedan from 120 zł", badge6:"★ Chrysler Pacifica · 7 pax · from 155 zł",
+    searchPh:"Search destination…",
+    spotTag:"★ Featured vehicle", spotSub:"Comfortable 7-passenger minivan · Perfect for families & groups",
+    spotF1:"7 seats", spotF2:"Spacious luggage area", spotF3:"Leather interior",
+    spotF4:"Climate control", spotF5:"USB charging", spotF6:"Smooth sliding doors",
+    spotPax:"Passengers", spotBags:"Suitcases", spotFrom:"From", spotCity:"Gdańsk Center",
+    secTransfers:"Airport Transfers", secGolf:"Golf Clubs", secTours:"Day Tours",
+    colRoute:"Route (from / to airport)", colRouteGolf:"Route", colRouteTours:"Tour",
+    colSedan:"Sedan · 1–4 pax", colVan:"Van · 1–5 pax",
+    colPacifica:"Chrysler Pacifica · 1–7 pax", colBus:"Bus · 1–8 pax",
+    colTourSedan:"Car · up to 4 pax", colTourVan:"Car · up to 5 pax",
+    colTourPac:"Chrysler Pacifica · up to 7 pax", colTourBus:"Car · up to 8 pax",
+    book:"Book",
+    f1t:"Fixed fare", f1d:"Price confirmed at booking. No meters, no surge, no hidden fees — parking and tolls always included.",
+    f2t:"Flight tracking", f2d:"We monitor your flight in real time. If it’s delayed, your driver adjusts — at no extra charge.",
+    f3t:"Name-board meet", f3d:"Your driver meets you in the arrivals hall holding a board with your name or company logo.",
+    f4t:"24 / 7 availability", f4d:"Early morning, late night, or on a public holiday — we operate every day of the year.",
+    footerBooking:"Booking", footerFleet:"Fleet", footerTerms:"Terms", footerContact:"Contact",
+    footerCopy:"© 2026 GDN Transfer · Gdańsk, Poland",
+    emptyMsg:"No routes found —", clearSearch:"clear search", routesSuffix:" routes"
+  },
+  pl: {
+    topbar:"Stałe ceny · Wszystkie trasy · 24/7 · śledzenie lotu",
+    navServices:"Usługi", navFleet:"Flota", navPrices:"Cennik", navBooking:"Rezerwacja", navContact:"Kontakt",
+    eyebrow:"Prywatne transfery w stałych cenach · Lotnisko Gdańsk GDN",
+    h1a:"Każdy kierunek.", h1b:"Jedna jasna cena.",
+    heroSub:"Zarezerwuj z wyprzedzeniem transfer z Lotniska Gdańsk im. Lecha Wałęsy. Bez taksometrów, bez podwyżek — cena potwierdzona przy rezerwacji.",
+    badge1:"✓ Parking i opłaty w cenie", badge2:"✓ śledzenie lotu",
+    badge3:"✓ Anglojęzyczni kierowcy", badge4:"✓ Usługi 24 / 7",
+    badge5:"Sedan od 120 zł", badge6:"★ Chrysler Pacifica · 7 os. · od 155 zł",
+    searchPh:"Szukaj miejscowości…",
+    spotTag:"★ Polecany pojazd", spotSub:"Komfortowy miniwan na 7 osób · Idealny dla rodzin i grup",
+    spotF1:"7 miejsc", spotF2:"Duża przestrzeń bagażowa", spotF3:"Skórzana tapicerka",
+    spotF4:"Klimatyzacja", spotF5:"Ładowanie USB", spotF6:"Przesuwne drzwi",
+    spotPax:"Pasażerów", spotBags:"Walizki", spotFrom:"Od", spotCity:"Centrum Gdańska",
+    secTransfers:"Transfery lotniskowe", secGolf:"Pola golfowe", secTours:"Wycieczki",
+    colRoute:"Trasa (z/na lotnisko)", colRouteGolf:"Trasa", colRouteTours:"Wycieczka",
+    colSedan:"Sedan · 1–4 os.", colVan:"Van · 1–5 os.",
+    colPacifica:"Chrysler Pacifica · 1–7 os.", colBus:"Bus · 1–8 os.",
+    colTourSedan:"Auto · do 4 os.", colTourVan:"Auto · do 5 os.",
+    colTourPac:"Chrysler Pacifica · do 7 os.", colTourBus:"Auto · do 8 os.",
+    book:"Zamów",
+    f1t:"Stała cena", f1d:"Cena potwierdzona przy rezerwacji. Bez taksometrów, bez podwyżek, bez ukrytych opłat — parking i opłaty drogowe zawsze w cenie.",
+    f2t:"śledzenie lotu", f2d:"śledzamy Twój lot w czasie rzeczywistym. W razie opóźnienia kierowca dostosowuje czas przyjazdu — bez dodatkowych opłat.",
+    f3t:"Powitanie z tabliczką", f3d:"Kierowca czeka na Ciebie w hali przylotów z tabliczką z Twoim imieniem lub logo firmy.",
+    f4t:"Dostępność 24 / 7", f4d:"Wczesny ranek, późna noc czy święto — działamy każdego dnia w roku.",
+    footerBooking:"Rezerwacja", footerFleet:"Flota", footerTerms:"Regulamin", footerContact:"Kontakt",
+    footerCopy:"© 2026 GDN Transfer · Gdańsk, Polska",
+    emptyMsg:"Nie znaleziono tras —", clearSearch:"wyczyść", routesSuffix:" tras"
+  },
+  uk: {
+    topbar:"Фіксовані ціни · Всі маршрути · 24/7 · Відстеження рейсу",
+    navServices:"Послуги", navFleet:"Флот", navPrices:"Ціни", navBooking:"Бронювання", navContact:"Контакт",
+    eyebrow:"Приватні трансфери за фіксованими цінами · Аеропорт Гданьск GDN",
+    h1a:"Кожен маршрут.", h1b:"Одна чітка ціна.",
+    heroSub:"Попереднє бронювання трансферу з аеропорту Гданьск ім. Леха Валенси. Без лічильників, без підвищення цін — тариф підтверджується при бронюванні.",
+    badge1:"✓ Паркування та збори включені", badge2:"✓ Відстеження рейсу",
+    badge3:"✓ Водії розмовляють англійською", badge4:"✓ Сервіс 24 / 7",
+    badge5:"Седан від 120 zł", badge6:"★ Chrysler Pacifica · 7 ос. · від 155 zł",
+    searchPh:"Пошук напрямку…",
+    spotTag:"★ Рекомендований транспорт",
+    spotSub:"Комфортний мінівен на 7 пасажирів · Ідеально для сімей і груп",
+    spotF1:"7 місць", spotF2:"Просторий багажний відсік",
+    spotF3:"Шкіряний салон", spotF4:"Клімат-контроль",
+    spotF5:"Зарядка USB", spotF6:"Розсувні двері",
+    spotPax:"Пасажирів", spotBags:"Валізи",
+    spotFrom:"Від", spotCity:"Центр Гданьска",
+    secTransfers:"Трансфери аеропорту", secGolf:"Гольф-клуби", secTours:"Екскурсії",
+    colRoute:"Маршрут (з/до аеропорту)", colRouteGolf:"Маршрут", colRouteTours:"Екскурсія",
+    colSedan:"Седан · 1–4 ос.", colVan:"Мінівен · 1–5 ос.",
+    colPacifica:"Chrysler Pacifica · 1–7 ос.", colBus:"Автобус · 1–8 ос.",
+    colTourSedan:"Авто · до 4 ос.", colTourVan:"Авто · до 5 ос.",
+    colTourPac:"Chrysler Pacifica · до 7 ос.", colTourBus:"Авто · до 8 ос.",
+    book:"Замовити",
+    f1t:"Фіксований тариф",
+    f1d:"Ціна підтверджується при бронюванні. Без лічильників, без підвищення, без прихованих зборів — паркування та дорожні збори завжди включені.",
+    f2t:"Відстеження рейсу",
+    f2d:"Ми відстежуємо ваш рейс у режимі реального часу. Якщо він затримується, водій коригує час — без додаткової плати.",
+    f3t:"Зустріч із табличкою",
+    f3d:"Водій зустрічає вас у залі прильотів з табличкою з вашим ім’ям або логотипом компанії.",
+    f4t:"Доступність 24 / 7",
+    f4d:"Ранній ранок, пізня ніч або вихідний день — ми працюємо кожен день у році.",
+    footerBooking:"Бронювання", footerFleet:"Флот",
+    footerTerms:"Умови", footerContact:"Контакт",
+    footerCopy:"© 2026 GDN Transfer · Гданьск, Польща",
+    emptyMsg:"Маршрути не знайдено —", clearSearch:"очистити", routesSuffix:" маршрутів"
+  }
+};
+
+let lang = 'en';
+
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.dataset.i18n; if (T[l][k] !== undefined) el.textContent = T[l][k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const k = el.dataset.i18nPh; if (T[l][k]) el.placeholder = T[l][k];
+  });
+  document.querySelectorAll('.row-route[data-' + l + ']').forEach(el => {
+    el.textContent = el.dataset[l];
+  });
+  filterRows();
+}
+
+const searchInput = document.getElementById('searchInput');
+const searchCount = document.getElementById('searchCount');
+const emptyState  = document.getElementById('emptyState');
+const emptyMsg    = document.getElementById('emptyMsg');
+const clearBtn    = document.getElementById('clearBtn');
+const allRows     = document.querySelectorAll('.price-row');
+const groupIds    = ['group-transfers','group-golf','group-tours'];
+
+clearBtn.addEventListener('click', e => {
+  e.preventDefault();
+  searchInput.value = '';
+  filterRows();
+});
+
+function filterRows() {
+  const q = searchInput.value.toLowerCase().trim();
+  let visible = 0;
+  allRows.forEach(row => {
+    const rr = row.querySelector('.row-route');
+    const hay = [
+      row.dataset.route || '',
+      rr ? (rr.dataset.en||'')+' '+(rr.dataset.pl||'')+' '+(rr.dataset.uk||'')+' '+rr.textContent : ''
+    ].join(' ').toLowerCase();
+    const match = !q || hay.includes(q);
+    row.classList.toggle('hidden', !match);
+    if (match) visible++;
+  });
+  groupIds.forEach(id => {
+    const g = document.getElementById(id);
+    if (!g) return;
+    g.style.display = [...g.querySelectorAll('.price-row')].some(r => !r.classList.contains('hidden')) ? '' : 'none';
+  });
+  if (q) {
+    searchCount.textContent = visible + T[lang].routesSuffix;
+  } else {
+    searchCount.textContent = '';
+  }
+  if (emptyMsg) emptyMsg.textContent = T[lang].emptyMsg;
+  if (clearBtn) clearBtn.textContent = T[lang].clearSearch;
+  emptyState.style.display = visible === 0 && q ? 'block' : 'none';
+}
+
+searchInput.addEventListener('input', filterRows);
+filterRows();
+</script>
+</body>
+</html>
